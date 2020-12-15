@@ -64,7 +64,7 @@ namespace HopeOfTheAncients
             grass?.Dispose();
         }
 
-        public void Render()
+        public void Render(Camera camera)
         {
             foreach(var p in mapEffect.Ambient.Passes)
             {
@@ -72,7 +72,7 @@ namespace HopeOfTheAncients
                 graphicsDevice.VertexBuffer = vertexBuffer;
                 graphicsDevice.IndexBuffer = indexBuffer;
 
-                mapEffect.Ambient.MainPass.WorldViewProj = Matrix.CreateScaling(new Vector3(0.1f));
+                mapEffect.Ambient.MainPass.WorldViewProj = camera.ViewProjection;
                 mapEffect.Ambient.MainPass.grass = grass;
 
                 graphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles, 0, 0, (int)vertexBuffer.VertexCount, 0, indexBuffer.IndexCount / 3);

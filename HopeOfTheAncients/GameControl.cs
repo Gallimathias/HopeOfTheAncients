@@ -13,10 +13,12 @@ namespace HopeOfTheAncients
     {
         private readonly ChunkRenderer renderer;
         private RenderTarget2D? renderTarget;
+        private readonly Camera camera;
 
         public GameControl(BaseScreenComponent manager, string style = "") : base(manager, style)
         {
             renderer = new ChunkRenderer(ScreenManager);
+            camera = new Camera();
         }
 
         protected override void OnPreDraw(GameTime gameTime)
@@ -32,13 +34,16 @@ namespace HopeOfTheAncients
             {
                 renderTarget?.Dispose();
                 renderTarget = new RenderTarget2D(ScreenManager.GraphicsDevice, ActualClientSize.X, ActualClientSize.Y, PixelInternalFormat.Rgba8);
+                camera.UpdateBounds(ActualClientSize.X, ActualClientSize.Y);
             }
+
+            camera.Update();
 
             ScreenManager.GraphicsDevice.SetRenderTarget(renderTarget);
 
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            renderer.Render();
+            renderer.Render(camera);
 
             ScreenManager.GraphicsDevice.SetRenderTarget(null);
 
