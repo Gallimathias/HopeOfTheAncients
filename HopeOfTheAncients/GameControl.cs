@@ -1,5 +1,6 @@
 ﻿using engenious;
 using engenious.Graphics;
+using engenious.Input;
 using engenious.UI;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,34 @@ namespace HopeOfTheAncients
         public GameControl(BaseScreenComponent manager, string style = "") : base(manager, style)
         {
             renderer = new ChunkRenderer(ScreenManager);
-            camera = new Camera();
+            camera = new Camera() { Position = Vector3.UnitZ };
+        }
+
+        protected override void OnUpdate(GameTime gameTime)
+        {
+            base.OnUpdate(gameTime);
+
+            var keyBoardState = Keyboard.GetState();
+
+            var dir = new Vector2(0, 0);
+            if (keyBoardState.IsKeyDown(Keys.W))
+            {
+                dir += new Vector2(0, -1);
+            }
+            if (keyBoardState.IsKeyDown(Keys.S))
+            {
+                dir += new Vector2(0, 1);
+            }
+            if (keyBoardState.IsKeyDown(Keys.A))
+            {
+                dir += new Vector2( -1,0);
+            }
+            if (keyBoardState.IsKeyDown(Keys.D))
+            {
+                dir += new Vector2(1,0);
+            }
+
+            camera.Position += new Vector3(dir, 0);
         }
 
         protected override void OnPreDraw(GameTime gameTime)

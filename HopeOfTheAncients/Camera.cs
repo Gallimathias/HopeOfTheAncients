@@ -14,17 +14,21 @@ namespace HopeOfTheAncients
 
         public Matrix ViewProjection { get; private set; }
 
+
+        public Vector3 Position { get; set; }
+
         public void UpdateBounds(int width, int height)
         {
             const int tileCount = 20;
 
             float aspectRatio = (float)height / width;
 
-            Projection = Matrix.CreateOrthographicOffCenter(0, tileCount / aspectRatio, tileCount, 0, -10, 10);
+            Projection = Matrix.CreateOrthographicOffCenter(0, tileCount / aspectRatio, 0, tileCount, -10, 10);
         }
         public void Update()
         {
-            ViewProjection = Projection;
+            View = Matrix.CreateLookAt(Position, Position + new Vector3(0, 0, -1), Vector3.UnitY);
+            ViewProjection = Projection * View;
         }
     }
 }
