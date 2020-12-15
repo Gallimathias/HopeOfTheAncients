@@ -7,7 +7,7 @@ namespace HopeOfTheAncients
         [STAThread()]
 		public static void Main (string[] args)
 		{
-			using(var game = new HopeOfTheAncientsGame ())
+			using(var game = new HopeOfTheAncientsGame())
 				game.Run();
 		}
 	}

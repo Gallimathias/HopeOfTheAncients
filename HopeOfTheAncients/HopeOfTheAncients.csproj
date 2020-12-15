@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net461</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <OutputType>Exe</OutputType>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="engenious" Version="0.3.0.36-alpha" />
-        <PackageReference Include="engenious.ContentTool" Version="0.3.0.30-alpha" />
-        <PackageReference Include="engenious.UI" Version="0.3.1.19-alpha" />
+        <PackageReference Include="engenious" Version="0.5.0.11-alpha" />
+        <PackageReference Include="engenious.ContentTool" Version="0.5.0.14-alpha" />
+        <PackageReference Include="engenious.UI" Version="0.5.0.7-alpha" />
     </ItemGroup>
     <ItemGroup>
         <EngeniousContentReference Include="Content\Content.ecp" />
