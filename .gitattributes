@@ -62,3 +62,4 @@
 *.bin filter=lfs diff=lfs merge=lfs -text
 *.dae filter=lfs diff=lfs merge=lfs -text
 *.glft filter=lfs diff=lfs merge=lfs -text
+*.dll filter=lfs diff=lfs merge=lfs -text
