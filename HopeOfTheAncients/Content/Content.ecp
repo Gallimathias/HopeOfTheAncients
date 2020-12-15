@@ -24,5 +24,18 @@
         </ContentFile>
       </Contents>
     </ContentFolder>
+    <ContentFolder>
+      <Name>Shaders</Name>
+      <Contents>
+        <ContentFile>
+          <Name>map.glsl</Name>
+          <Processor>EffectProcessor</Processor>
+          <Importer>Effect Importer</Importer>
+          <Settings>
+            <CreateUserEffect>True</CreateUserEffect>
+          </Settings>
+        </ContentFile>
+      </Contents>
+    </ContentFolder>
   </Contents>
 </Content>

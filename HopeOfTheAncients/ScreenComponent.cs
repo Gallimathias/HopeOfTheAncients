@@ -5,6 +5,8 @@ namespace HopeOfTheAncients
 {
     public class ScreenComponent : BaseScreenComponent
     {
+        private MainScreen? mainScreen;
+
         public ScreenComponent(Game game) : base(game)
         {
 
@@ -13,8 +15,20 @@ namespace HopeOfTheAncients
         protected override void LoadContent()
         {
             base.LoadContent();
-            
-            NavigateToScreen(new MainScreen(this));
+            mainScreen = new MainScreen(this);
+            NavigateToScreen(mainScreen);
+        }
+
+        protected override void UnloadContent()
+        {
+            mainScreen?.Dispose();
+            base.UnloadContent();
+        }
+
+        public override void Dispose()
+        {
+            mainScreen?.Dispose();
+            base.Dispose();
         }
     }
 }

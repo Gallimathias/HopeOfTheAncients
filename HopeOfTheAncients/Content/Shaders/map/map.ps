@@ -1,0 +1,11 @@
+#version 130
+
+uniform sampler2D grass;
+
+in vec2 psTexCoord;
+
+out vec4 outColor;
+void main()
+{
+	outColor = texture(grass, psTexCoord);
+}

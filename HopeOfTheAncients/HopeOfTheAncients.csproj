@@ -13,4 +13,14 @@
     <ItemGroup>
         <EngeniousContentReference Include="Content\Content.ecp" />
     </ItemGroup>
+    <ItemGroup>
+      <Reference Include="engenious.CreatedContent.Content">
+        <HintPath>Content\engenious.CreatedContent.Content.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="Assets\grass.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>

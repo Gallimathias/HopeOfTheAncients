@@ -16,7 +16,7 @@ namespace HopeOfTheAncients
 
         public GameControl(BaseScreenComponent manager, string style = "") : base(manager, style)
         {
-            renderer = new ChunkRenderer();
+            renderer = new ChunkRenderer(ScreenManager);
         }
 
         protected override void OnPreDraw(GameTime gameTime)
@@ -38,9 +38,11 @@ namespace HopeOfTheAncients
 
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-
+            renderer.Render();
 
             ScreenManager.GraphicsDevice.SetRenderTarget(null);
+
+
         }
 
         protected override void OnDrawContent(SpriteBatch batch, Rectangle contentArea, GameTime gameTime, float alpha)
@@ -56,6 +58,7 @@ namespace HopeOfTheAncients
         public void Dispose()
         {
             renderTarget?.Dispose();
+            renderer?.Dispose();
         }
     }
 }
