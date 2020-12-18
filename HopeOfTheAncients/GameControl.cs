@@ -3,10 +3,6 @@ using engenious.Graphics;
 using engenious.Input;
 using engenious.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HopeOfTheAncients
 {
@@ -15,11 +11,17 @@ namespace HopeOfTheAncients
         private readonly ChunkRenderer renderer;
         private RenderTarget2D? renderTarget;
         private readonly Camera camera;
+        private readonly SpriteBatch spriteBatch;
+
+        private readonly Entity entity;
 
         public GameControl(BaseScreenComponent manager, string style = "") : base(manager, style)
         {
             renderer = new ChunkRenderer(ScreenManager);
             camera = new Camera() { Position = Vector3.UnitZ };
+            spriteBatch = new SpriteBatch(manager.GraphicsDevice);
+
+            entity = new Entity(manager.GraphicsDevice);
         }
 
         protected override void OnUpdate(GameTime gameTime)
@@ -49,6 +51,78 @@ namespace HopeOfTheAncients
             camera.Position += new Vector3(dir, 0);
         }
 
+        private Vector2 ScreenToWorld(Vector2 screen)
+        {
+            var pos = new Vector3(screen.X, screen.Y, 0);
+
+            var viewport = new Viewport(ActualClientArea);
+
+            pos = viewport.Unproject(pos, camera.ViewProjection);
+
+            return new Vector2(pos.X, pos.Y);
+        }
+
+        private bool isMouseDown;
+        private Vector2 selectionStart, selectionEnd;
+        protected override void OnLeftMouseDown(MouseEventArgs args)
+        {
+            base.OnLeftMouseDown(args);
+
+            var pos = new Vector2(args.LocalPosition.X, ActualClientSize.Y - args.LocalPosition.Y);
+
+            selectionStart = selectionEnd = pos;
+            isMouseDown = true;
+        }
+        protected override void OnLeftMouseUp(MouseEventArgs args)
+        {
+            base.OnLeftMouseUp(args);
+
+            if (!isMouseDown)
+                return;
+
+            var worldStart = ScreenToWorld(selectionStart);
+            var worldEnd = ScreenToWorld(selectionEnd);
+
+            var worldRect = RectangleF.FromLTRB(Math.Min(worldStart.X, worldEnd.X), Math.Min(worldStart.Y, worldEnd.Y),
+                                            Math.Max(worldStart.X, worldEnd.X), Math.Max(worldStart.Y, worldEnd.Y));
+
+            entity.CollisionCheck(false);
+            if (worldRect.Contains(Entity.Bounds))
+            {
+                entity.CollisionCheck(true);
+            }
+
+            isMouseDown = false;
+
+
+
+            selectionStart = selectionEnd = Vector2.Zero;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs args)
+        {
+            base.OnMouseMove(args);
+
+            if (isMouseDown)
+            {
+                selectionEnd = new Vector2(args.LocalPosition.X, ActualClientSize.Y - args.LocalPosition.Y);
+            }
+        }
+
+        private void DrawRectangle(SpriteBatch batch, RectangleF rectangle)
+        {
+            if (rectangle.Width == 0)
+                return;
+            batch.Draw(Skin.Pix, rectangle, new Color(Color.Red, 0.2f));
+            var col = Color.Red;
+            batch.Draw(Skin.Pix, new RectangleF(rectangle.X, rectangle.Y, rectangle.Width, 1), col);
+            batch.Draw(Skin.Pix, new RectangleF(rectangle.X , rectangle.Y + rectangle.Height, rectangle.Width, 1), col);
+
+
+            batch.Draw(Skin.Pix, new RectangleF(rectangle.X, rectangle.Y, 1, rectangle.Height), col);
+            batch.Draw(Skin.Pix, new RectangleF(rectangle.X + rectangle.Width, rectangle.Y, 1, rectangle.Height), col);
+        }
+
         protected override void OnPreDraw(GameTime gameTime)
         {
             base.OnPreDraw(gameTime);
@@ -73,6 +147,23 @@ namespace HopeOfTheAncients
 
             renderer.Render(camera);
 
+
+            spriteBatch.Begin(transformMatrix: camera.ViewProjection, useScreenSpace: false, rasterizerState: RasterizerState.CullCounterClockwise);// (transformMatrix: );
+
+
+            entity.Render(spriteBatch);
+
+
+            spriteBatch.End();
+
+            spriteBatch.Begin();
+
+
+            DrawRectangle(spriteBatch, RectangleF.FromLTRB(Math.Min(selectionStart.X, selectionEnd.X), Math.Min(selectionStart.Y, selectionEnd.Y),
+                                            Math.Max(selectionStart.X, selectionEnd.X), Math.Max(selectionStart.Y, selectionEnd.Y)));
+
+            spriteBatch.End();
+
             ScreenManager.GraphicsDevice.SetRenderTarget(null);
 
 
@@ -86,12 +177,14 @@ namespace HopeOfTheAncients
                 return;
 
             batch.Draw(renderTarget, contentArea, Color.White);
+
         }
 
         public void Dispose()
         {
             renderTarget?.Dispose();
             renderer?.Dispose();
+            spriteBatch?.Dispose();
         }
     }
 }

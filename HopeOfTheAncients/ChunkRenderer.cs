@@ -20,7 +20,7 @@ namespace HopeOfTheAncients
 
         public ChunkRenderer(BaseScreenComponent manager)
         {
-            this.graphicsDevice = manager.GraphicsDevice;
+            graphicsDevice = manager.GraphicsDevice;
 
             grass = Texture2D.FromFile(graphicsDevice, "Assets/grass.png");
             mapEffect = manager.Content.Load<engenious.UserDefined.Shaders.map>("Shaders/map");
@@ -62,6 +62,7 @@ namespace HopeOfTheAncients
             vertexBuffer.Dispose();
             indexBuffer.Dispose();
             grass?.Dispose();
+            mapEffect?.Dispose();
         }
 
         public void Render(Camera camera)

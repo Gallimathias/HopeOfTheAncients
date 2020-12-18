@@ -6,9 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="engenious" Version="0.5.0.11-alpha" />
-        <PackageReference Include="engenious.ContentTool" Version="0.5.0.14-alpha" />
-        <PackageReference Include="engenious.UI" Version="0.5.0.7-alpha" />
+        <PackageReference Include="engenious" Version="0.5.0.12-alpha" />
+        <PackageReference Include="engenious.ContentTool" Version="0.5.0.15-alpha" />
+        <PackageReference Include="engenious.UI" Version="0.5.0.8-alpha" />
     </ItemGroup>
     <ItemGroup>
         <EngeniousContentReference Include="Content\Content.ecp" />
@@ -20,6 +20,9 @@
     </ItemGroup>
     <ItemGroup>
       <None Update="Assets\grass.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Assets\small_jack.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
