@@ -8,6 +8,7 @@ namespace HopeOfTheAncients
     {
         private GraphicsDevice graphicsDevice;
         private readonly Texture2D texture;
+        
 
 
         private bool isSelected;
@@ -23,12 +24,28 @@ namespace HopeOfTheAncients
             isSelected = p;
         }
 
-        public static RectangleF Bounds => new(0, 0, 1, 2);
+        public Vector2 Position { get; set; }
+
+        public Vector2 TargetPosition { get; set; }
+
+        public RectangleF Bounds => new(Position.X, Position.Y, 1, 2.5f);
 
         internal void Render(SpriteBatch spriteBatch)
         {
             var col = isSelected ? Color.Red : Color.White;
-            spriteBatch.Draw(texture, new RectangleF(0,0,1,2.5f), col);
+            spriteBatch.Draw(texture, Bounds, col);
+
+        }
+
+        public void Update(float elapsedTime)
+        {
+            var dir = TargetPosition - Position;
+            if (Math.Abs(dir.X) < 0.001f && Math.Abs(dir.Y) < 0.001f)
+            {
+                Position = TargetPosition;
+                return;
+            }
+            Position += dir.Normalized() * elapsedTime;
         }
     }
 }

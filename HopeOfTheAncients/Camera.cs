@@ -17,13 +17,19 @@ namespace HopeOfTheAncients
 
         public Vector3 Position { get; set; }
 
-        public void UpdateBounds(int width, int height)
-        {
-            const int tileCount = 20;
+        public Vector2 Unit { get; private set; }
 
+        public void UpdateBounds(int width, int height, int tileCount)
+        {
             float aspectRatio = (float)height / width;
 
+            Unit = new Vector2(height / tileCount, height / tileCount);
             Projection = Matrix.CreateOrthographicOffCenter(0, tileCount / aspectRatio, 0, tileCount, -10, 10);
+        }
+        public void UpdateBounds(int width, int height)
+        {
+            Unit = Vector2.One;
+            Projection = Matrix.CreateOrthographicOffCenter(0, width, 0, height, -10, 10);
         }
         public void Update()
         {

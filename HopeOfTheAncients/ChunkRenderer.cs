@@ -70,6 +70,7 @@ namespace HopeOfTheAncients
             foreach(var p in mapEffect.Ambient.Passes)
             {
                 p.Apply();
+                graphicsDevice.RasterizerState = new RasterizerState() { FillMode = PolygonMode.Line };
                 graphicsDevice.VertexBuffer = vertexBuffer;
                 graphicsDevice.IndexBuffer = indexBuffer;
 
