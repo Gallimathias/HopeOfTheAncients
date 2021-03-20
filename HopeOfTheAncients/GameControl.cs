@@ -29,7 +29,7 @@ namespace HopeOfTheAncients
             pixelCamera = new Camera() { Position = Vector3.UnitZ };
             spriteBatch = new SpriteBatch(manager.GraphicsDevice);
             selectedEntitites = new List<Entity>();
-            spriteFont = manager.Content.Load<SpriteFont>("Fonts/GameFont");
+            spriteFont = manager.Content.Load<SpriteFont>("engenious.UI:///Fonts/GameFont");
 
             entity = new Entity(manager.GraphicsDevice);
         }

@@ -27,11 +27,11 @@ namespace HopeOfTheAncients
 
             const int width = 100;
             const int height = 100;
-
-            vertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionTexture.VertexDeclaration, width * height * 4);
+            int vertexCount = width * height * 4;
+            vertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionTexture.VertexDeclaration, vertexCount);
             indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, width * height * 6);
 
-            var vertices = new VertexPositionTexture[(int)vertexBuffer.VertexCount];
+            var vertices = new VertexPositionTexture[vertexCount];
             var indices = new ushort[indexBuffer.IndexCount];
             int vIndex = 0, iIndex = 0;
             for (int y = 0; y < height; y++)
