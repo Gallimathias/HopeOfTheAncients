@@ -1,0 +1,1 @@
+https://upload.wikimedia.org/wikipedia/commons/5/50/Schema-all-stargate.gif
