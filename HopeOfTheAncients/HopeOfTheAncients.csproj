@@ -49,6 +49,9 @@
       <None Update="Assets\Stargate\chevron_7_light_on.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Assets\Stargate\event_horizon\*.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Assets\Stargate\gate.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

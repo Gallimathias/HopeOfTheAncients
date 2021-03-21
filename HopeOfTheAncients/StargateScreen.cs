@@ -17,6 +17,8 @@ namespace HopeOfTheAncients
     {
         private readonly StackPanel stackPanel;
 
+        private readonly TextureAnimation eventHorizon;
+
         private readonly Texture2D baseGate, ring, chevronFrame, chevronLightOff, chevronLightOn, chevronArrowOff, chevronArrowOn;
         private Glyph destinationGlyph;
 
@@ -60,6 +62,7 @@ namespace HopeOfTheAncients
             //var reader = new SpriteFontTypeReader();
             //reader.Read()
 
+            eventHorizon = new TextureAnimation(manager.GraphicsDevice, "Assets/Stargate/event_horizon", 3f);
 
             baseGate = Texture2D.FromFile(manager.GraphicsDevice, "Assets/Stargate/gate.png");
             ring = Texture2D.FromFile(manager.GraphicsDevice, "Assets/Stargate/ring.png");
@@ -297,6 +300,7 @@ namespace HopeOfTheAncients
         {
             base.OnDraw(batch, controlArea, gameTime);
 
+
             for (int i = 0; i < currentGlyphIndex; i++)
             {
                 batch.DrawString(glyphFont, DialingAddress[i].Character.ToString(), new Vector2(3 + i * 60, 15), i == currentDialingGlyphIndex ? Color.Blue : Color.White);
@@ -313,6 +317,7 @@ namespace HopeOfTheAncients
 
             var drawRectangle = new RectangleF(pos.X, pos.Y, maxSize, maxSize);
 
+            eventHorizon.Draw(batch, pos + new Vector2(maxSize / 4), new Vector2(maxSize / 2), (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             batch.Draw(baseGate, drawRectangle, Color.White);
             batch.Draw(ring, pos, null, Color.White, currentRotation, new Vector2(maxSize / 2f), new Vector2(maxSize), SpriteBatch.SpriteEffects.None, 0);
