@@ -2,9 +2,11 @@
 using engenious.Graphics;
 using engenious.Input;
 using engenious.UI;
+using HopeOfTheAncients.Tiled;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace HopeOfTheAncients
 {
@@ -30,6 +32,8 @@ namespace HopeOfTheAncients
             spriteBatch = new SpriteBatch(manager.GraphicsDevice);
             selectedEntitites = new List<Entity>();
             spriteFont = manager.Content.Load<SpriteFont>("engenious.UI:///Fonts/GameFont") ?? throw new ArgumentException();
+
+            var map = TileLoader.Load(new FileInfo(Path.Combine(".", "Assets", "map.tmx")));
 
             entity = new Entity(manager.GraphicsDevice);
         }

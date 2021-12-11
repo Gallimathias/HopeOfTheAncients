@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30803.129
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HopeOfTheAncients", "HopeOfTheAncients\HopeOfTheAncients.csproj", "{05A74A72-3B45-4D67-9B30-C74BDF8F6074}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StargateSystemReactive", "StargateSystemReactive\StargateSystemReactive.csproj", "{D0479616-564D-420E-BDD8-67E1C44866ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HopeOfTheAncients.Tiled", "HopeOfTheAncients.Tiled\HopeOfTheAncients.Tiled.csproj", "{E9C5332B-BC3B-4CB6-8DE5-AF1D06DDD5A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D0479616-564D-420E-BDD8-67E1C44866ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0479616-564D-420E-BDD8-67E1C44866ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0479616-564D-420E-BDD8-67E1C44866ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9C5332B-BC3B-4CB6-8DE5-AF1D06DDD5A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9C5332B-BC3B-4CB6-8DE5-AF1D06DDD5A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9C5332B-BC3B-4CB6-8DE5-AF1D06DDD5A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9C5332B-BC3B-4CB6-8DE5-AF1D06DDD5A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

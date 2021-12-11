@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /HopeOfTheAncients/Content/engenious.CreatedContent.Content.dll
+/engenious.Easy2D
+/engenious.Easy2D.7z
