@@ -29,7 +29,7 @@ namespace HopeOfTheAncients
             pixelCamera = new Camera() { Position = Vector3.UnitZ };
             spriteBatch = new SpriteBatch(manager.GraphicsDevice);
             selectedEntitites = new List<Entity>();
-            spriteFont = manager.Content.Load<SpriteFont>("engenious.UI:///Fonts/GameFont");
+            spriteFont = manager.Content.Load<SpriteFont>("engenious.UI:///Fonts/GameFont") ?? throw new ArgumentException();
 
             entity = new Entity(manager.GraphicsDevice);
         }
@@ -225,17 +225,20 @@ namespace HopeOfTheAncients
 
             spriteBatch.End();
 
-            ScreenManager.GraphicsDevice.SetRenderTarget(null);
+            ScreenManager.GraphicsDevice.SetRenderTarget(null!);
         }
 
         protected override void OnDrawContent(SpriteBatch batch, Rectangle contentArea, GameTime gameTime, float alpha)
         {
             base.OnDrawContent(batch, contentArea, gameTime, alpha);
 
-            if (gameRenderTarget == null)
+            if (gameRenderTarget is null)
                 return;
 
             batch.Draw(gameRenderTarget, contentArea, Color.White);
+
+            if (hudRenderTarget is null)
+                return;
 
             batch.Draw(hudRenderTarget, contentArea, Color.White);
         }

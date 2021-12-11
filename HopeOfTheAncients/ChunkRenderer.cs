@@ -23,7 +23,7 @@ namespace HopeOfTheAncients
             graphicsDevice = manager.GraphicsDevice;
 
             grass = Texture2D.FromFile(graphicsDevice, "Assets/grass.png");
-            mapEffect = manager.Content.Load<engenious.UserDefined.Shaders.map>("Shaders/map");
+            mapEffect = manager.Content.Load<engenious.UserDefined.Shaders.map>("Shaders/map") ?? throw new ArgumentException();
 
             const int width = 100;
             const int height = 100;

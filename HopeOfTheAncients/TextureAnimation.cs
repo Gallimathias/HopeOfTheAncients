@@ -37,14 +37,9 @@ namespace HopeOfTheAncients
             var nextFrame = (curFrame + 1) % Frames.Length;
             var t = curFrameValue - curFrame;
 
-            batch.End();
+            batch.Draw(Frames[curFrame], pos, null, Color.White, 0f, Vector2.Zero, maxSize, SpriteBatch.SpriteEffects.None, 0f);
+            //batch.Draw(Frames[nextFrame], pos, null, new Color(1, 1, 1, t), 0f, Vector2.Zero, maxSize, SpriteBatch.SpriteEffects.None, 0.1f);
 
-            batch.Begin(SpriteBatch.SpriteSortMode.Deffered, BlendState.NonPremultiplied);
-
-            batch.Draw(Frames[curFrame], pos, null, new Color(1, 1, 1, 1 - t), 0f, Vector2.Zero, maxSize, SpriteBatch.SpriteEffects.None, 0f);
-            batch.Draw(Frames[nextFrame], pos, null, new Color(1, 1, 1, t), 0f, Vector2.Zero, maxSize, SpriteBatch.SpriteEffects.None, 0.1f);
-
-            batch.End();
         }
 
         public void Dispose()

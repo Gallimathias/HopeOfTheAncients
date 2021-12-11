@@ -9,8 +9,6 @@ namespace HopeOfTheAncients
         private GraphicsDevice graphicsDevice;
         private readonly Texture2D texture;
         
-
-
         private bool isSelected;
 
         public Entity(GraphicsDevice graphicsDevice)

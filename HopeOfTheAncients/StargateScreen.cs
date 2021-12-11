@@ -35,6 +35,10 @@ namespace HopeOfTheAncients
         private int currentGlyphIndex, currentDialingGlyphIndex = -1;
 
         private bool isAddressLocked;
+        private bool isShutdown;
+        private bool isActive;
+
+        private readonly List<TextButton> buttons;
 
         public void ResetAddress()
         {
@@ -42,6 +46,20 @@ namespace HopeOfTheAncients
             isAddressLocked = false;
             currentDialingGlyphIndex = -1;
             isAddressLocked = false;
+
+            for (int i = 0; i < ChevronLightOpacities.Length; i++)
+            {
+                ChevronLightOpacities[i] = 0;
+            }
+
+            lockChevronLightOpacity = 0;
+
+            foreach (var button in buttons)
+            {
+                if (!button.Enabled)
+                    button.Enabled = true;
+            }
+
         }
 
         public void AppendGlyph(Glyph glyph)
@@ -55,14 +73,15 @@ namespace HopeOfTheAncients
 
         public StargateScreen(BaseScreenComponent manager) : base(manager)
         {
-            
+
+            buttons = new List<TextButton>();
             Background = new SolidColorBrush(Color.DarkRed);
-            glyphFont = manager.Content.Load<SpriteFont>("Fonts/milkyway-glyphs");
+            glyphFont = manager.Content.Load<SpriteFont>("Fonts/milkyway-glyphs") ?? throw new ArgumentException();
 
             //var reader = new SpriteFontTypeReader();
             //reader.Read()
 
-            eventHorizon = new TextureAnimation(manager.GraphicsDevice, "Assets/Stargate/event_horizon", 3f);
+            eventHorizon = new TextureAnimation(manager.GraphicsDevice, "Assets/Stargate/event_horizon", 25f);
 
             baseGate = Texture2D.FromFile(manager.GraphicsDevice, "Assets/Stargate/gate.png");
             ring = Texture2D.FromFile(manager.GraphicsDevice, "Assets/Stargate/ring.png");
@@ -77,15 +96,16 @@ namespace HopeOfTheAncients
                 VerticalAlignment = VerticalAlignment.Stretch
             };
 
-            var button = new TextButton(manager, "Lock");
+            var lockButton = new TextButton(manager, "Lock");
             var glyphStack =
-                CreateGlyphButtons(manager, glyphFont!, i =>
+                CreateGlyphButtons(manager, glyphFont!, (button, i) =>
                 {
                     AppendGlyph(KnownGlyphSets.Milkyway.Glyphs[i]);
+                    button.Enabled = false;
                 });
 
-            button.LeftMouseClick += LockButton_LeftMouseClick;
-            stackPanel.Controls.Add(button);
+            lockButton.LeftMouseClick +=(s,e) => LockButton_LeftMouseClick(lockButton, e);
+            stackPanel.Controls.Add(lockButton);
             stackPanel.Controls.Add(glyphStack);
 
             Controls.Add(stackPanel);
@@ -107,21 +127,47 @@ namespace HopeOfTheAncients
             var lockChevron = new StateMachine.GenericNode(UpdateLockChevron);
             var lockChevronLightOff = new StateMachine.GenericNode(UpdateLockChevronLightOff);
             var kawoosh = new StateMachine.GenericNode((e, t) => true);
+            var active = new StateMachine.GenericNode((e, t) =>
+            {
+                if (!isActive)
+                {
+                    isActive = true;
+                }
+
+                return isShutdown;
+            });
+            var shutdown = new StateMachine.GenericNode((e, t) =>
+            {
+                if (isShutdown)
+                {
+                    isShutdown = false;
+                    isActive = false;
+
+                    ResetAddress();
+                }
+
+                return !isShutdown;
+            });
             stateMachine.AddNode(dialGlyph);
             stateMachine.AddNode(moveToGlyph);
             stateMachine.AddNode(lockChevron);
             stateMachine.AddNode(lockChevronLightOff);
+            stateMachine.AddNode(kawoosh);
+            stateMachine.AddNode(active);
 
             stateMachine.AddTransition(startNode, dialGlyph, () => IsDialing);
             stateMachine.AddTransition(dialGlyph, moveToGlyph, () => true);
             stateMachine.AddTransition(moveToGlyph, lockChevron, () => true);
             stateMachine.AddTransition(lockChevron, lockChevronLightOff, () => !IsLastChevron());
             stateMachine.AddTransition(lockChevron, kawoosh, IsLastChevron);
+            stateMachine.AddTransition(kawoosh, active, () => isAddressLocked && !isShutdown);
+            stateMachine.AddTransition(active, shutdown, () => isShutdown);
+            stateMachine.AddTransition(shutdown, startNode, () => !isShutdown);
             stateMachine.AddTransition(lockChevronLightOff, dialGlyph, () => IsDialing);
 
         }
 
-        private StackPanel CreateGlyphButtons(BaseScreenComponent baseScreenComponent, SpriteFont spriteFont, Action<int> glypAction)
+        private StackPanel CreateGlyphButtons(BaseScreenComponent baseScreenComponent, SpriteFont spriteFont, Action<TextButton, int> glypAction)
         {
             var panel = new StackPanel(baseScreenComponent)
             {
@@ -149,12 +195,12 @@ namespace HopeOfTheAncients
                     //MaxHeight = 30,
                     //MaxWidth = 30,
                     VerticalTextAlignment = VerticalAlignment.Center
-                    
+
                 };
 
-                glyphButton.LeftMouseClick += (s, e) => glypAction((int)s.Tag!);
+                glyphButton.LeftMouseClick += (s, e) => glypAction(glyphButton, (int)s.Tag!);
 
-                if(i < 20)
+                if (i < 20)
                 {
                     upperPanel.Controls.Add(glyphButton);
 
@@ -163,6 +209,8 @@ namespace HopeOfTheAncients
                 {
                     lowerPanel.Controls.Add(glyphButton);
                 }
+
+                buttons.Add(glyphButton);
             }
 
             return panel;
@@ -170,7 +218,18 @@ namespace HopeOfTheAncients
 
         private bool IsLastChevron() => isAddressLocked && currentDialingGlyphIndex + 1 == currentGlyphIndex;
 
-        private void LockButton_LeftMouseClick(Control sender, MouseEventArgs args) => isAddressLocked = true;
+        private void LockButton_LeftMouseClick(TextButton sender, MouseEventArgs args)
+        {
+            if (isActive)
+            {
+                isShutdown = true;
+            }
+            else
+            {
+                sender.Background = new SolidColorBrush(Color.OrangeRed);
+                isAddressLocked = true;
+            }
+        }
 
         private bool UpdateLockChevronLightOff(float elapsedTime, float totalTime)
         {
@@ -193,7 +252,7 @@ namespace HopeOfTheAncients
             return elapsedAnimaton >= 1f;
         }
 
-        private float fullGateRotationTime = 6.5f;
+        private const float fullGateRotationTime = 6.5f;
         private bool UpdateMoveToGlyph(float elapsedTime, float totalTime)
         {
             if (currentRotation != destinationRotation)
@@ -317,7 +376,10 @@ namespace HopeOfTheAncients
 
             var drawRectangle = new RectangleF(pos.X, pos.Y, maxSize, maxSize);
 
-            eventHorizon.Draw(batch, pos + new Vector2(maxSize / 4), new Vector2(maxSize / 2), (float)gameTime.ElapsedGameTime.TotalSeconds);
+            if (isActive)
+            {
+                eventHorizon.Draw(batch, pos + new Vector2(maxSize / 4), new Vector2(maxSize / 2), (float)gameTime.ElapsedGameTime.TotalSeconds);
+            }
 
             batch.Draw(baseGate, drawRectangle, Color.White);
             batch.Draw(ring, pos, null, Color.White, currentRotation, new Vector2(maxSize / 2f), new Vector2(maxSize), SpriteBatch.SpriteEffects.None, 0);

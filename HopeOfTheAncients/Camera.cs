@@ -26,11 +26,13 @@ namespace HopeOfTheAncients
             Unit = new Vector2(height / tileCount, height / tileCount);
             Projection = Matrix.CreateOrthographicOffCenter(0, tileCount / aspectRatio, 0, tileCount, -10, 10);
         }
+
         public void UpdateBounds(int width, int height)
         {
             Unit = Vector2.One;
             Projection = Matrix.CreateOrthographicOffCenter(0, width, 0, height, -10, 10);
         }
+
         public void Update()
         {
             View = Matrix.CreateLookAt(Position, Position + new Vector3(0, 0, -1), Vector3.UnitY);

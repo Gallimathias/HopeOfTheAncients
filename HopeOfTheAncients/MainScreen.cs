@@ -13,13 +13,16 @@ namespace HopeOfTheAncients
         {
             gameScreen = new GameScreen(manager);
             stargateScreen = new StargateScreen(manager);
-            Background = new BorderBrush(Color.DarkRed);
+            Background = new BorderBrush(Color.Red);
             StackPanel panel = new(manager);
             Controls.Add(panel);
 
             TextButton button = new(manager, "Start Game");
-            button.LeftMouseClick += (s, e) => manager.NavigateToScreen(stargateScreen);
+            button.LeftMouseClick += (s, e) => manager.NavigateToScreen(gameScreen);
+            TextButton stargateButton = new(manager, "To the StarGate");
+            stargateButton.LeftMouseClick += (s, e) => manager.NavigateToScreen(stargateScreen);
             panel.Controls.Add(button);
+            panel.Controls.Add(stargateButton);
         }
 
         public void Dispose()

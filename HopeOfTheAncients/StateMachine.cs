@@ -93,7 +93,7 @@ namespace HopeOfTheAncients
         }
         public class Transitions
         {
-            public INode SourceNode { get; set; }
+            public INode? SourceNode { get; set; }
             private HashSet<Transition> transitions;
             public Transitions()
             {
@@ -123,14 +123,14 @@ namespace HopeOfTheAncients
 
         public class Transition : IEquatable<Transition?>
         {
-            public Transition(INode sourceNode, INode targetNode, Func<bool> guard)
+            public Transition(INode? sourceNode, INode targetNode, Func<bool> guard)
             {
                 SourceNode = sourceNode;
                 TargetNode = targetNode;
                 Guard = guard;
             }
             public Func<bool> Guard { get; set; }
-            public INode SourceNode { get; set; }
+            public INode? SourceNode { get; set; }
             public INode TargetNode { get; set; }
 
             public override bool Equals(object? obj) => Equals(obj as Transition);
