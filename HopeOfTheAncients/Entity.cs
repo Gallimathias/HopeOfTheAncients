@@ -43,7 +43,7 @@ namespace HopeOfTheAncients
                 Position = TargetPosition;
                 return;
             }
-            Position += dir.Normalized() * elapsedTime;
+            Position += dir.Normalized() * Math.Min(elapsedTime, dir.Length);
         }
     }
 }

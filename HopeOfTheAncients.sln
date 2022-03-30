@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HopeOfTheAncients", "HopeOf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StargateSystemReactive", "StargateSystemReactive\StargateSystemReactive.csproj", "{D0479616-564D-420E-BDD8-67E1C44866ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HopeOfTheAncients.Tiled", "HopeOfTheAncients.Tiled\HopeOfTheAncients.Tiled.csproj", "{E9C5332B-BC3B-4CB6-8DE5-AF1D06DDD5A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HopeOfTheAncients.Tiled", "HopeOfTheAncients.Tiled\HopeOfTheAncients.Tiled.csproj", "{E9C5332B-BC3B-4CB6-8DE5-AF1D06DDD5A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -24,16 +24,38 @@ namespace HopeOfTheAncients
 
         private readonly List<Entity> selectedEntitites;
 
+        private readonly Texture2DArray textures;
+
         public GameControl(BaseScreenComponent manager, string style = "") : base(manager, style)
         {
-            renderer = new ChunkRenderer(ScreenManager);
+            var map = TileLoader.Load(new FileInfo(Path.Combine(".", "Assets", "map.tmx")));
+            renderer = new ChunkRenderer(ScreenManager, (Map.TileLayer)map.Layers[0]);
             camera = new Camera() { Position = Vector3.UnitZ };
             pixelCamera = new Camera() { Position = Vector3.UnitZ };
             spriteBatch = new SpriteBatch(manager.GraphicsDevice);
             selectedEntitites = new List<Entity>();
             spriteFont = manager.Content.Load<SpriteFont>("engenious.UI:///Fonts/GameFont") ?? throw new ArgumentException();
 
-            var map = TileLoader.Load(new FileInfo(Path.Combine(".", "Assets", "map.tmx")));
+            int sizeX = -1, sizeY = -1;
+
+            var texts = new List<Texture2D>();
+            foreach (var set in map.TileSet)
+            {
+                foreach(var t in set.Tiles)
+                {
+                    var texPath = Path.Combine(".", "Assets", t);
+                    if (!File.Exists(texPath))
+                        continue;
+                    var loadedTex = Texture2D.FromFile(manager.GraphicsDevice, texPath);
+                    if (sizeX != -1 && (loadedTex.Width != sizeX || loadedTex.Height != sizeY))
+                        throw new InvalidProgramException();
+                    sizeX = loadedTex.Width;
+                    sizeY = loadedTex.Height;
+                    texts.Add(loadedTex);
+                }
+            }
+            textures = new Texture2DArray(manager.GraphicsDevice, 1, sizeX, sizeY, texts.ToArray());
+
 
             entity = new Entity(manager.GraphicsDevice);
         }
@@ -194,7 +216,7 @@ namespace HopeOfTheAncients
 
             ScreenManager.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            renderer.Render(camera);
+            renderer.Render(camera, textures);
 
 
             spriteBatch.Begin(transformMatrix: camera.ViewProjection, useScreenSpace: false, rasterizerState: RasterizerState.CullCounterClockwise);// (transformMatrix: );

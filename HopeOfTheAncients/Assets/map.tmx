@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="1">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="64" tileheight="64" infinite="0" nextlayerid="6" nextobjectid="1">
  <tileset firstgid="1" source="HopeOfTheAcientDefault.tsx"/>
  <layer id="1" name="Kachelebene 1" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1DEKACAMBMEEG///YhGs7FJFcIrpDxYuIyIBAACgaF669/xuNxiHHv30eIu/AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKoWiqknbQ==
+   eJzt0zEKACAMBMGk9P8fVrARwcLKgFMM1waWZES0IZcFJj8BAABnbfP6nt/pUYsetegBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3Oq5ryep
   </data>
  </layer>
- <layer id="3" name="Kachelebene 2" width="100" height="100">
+ <layer id="3" name="Kachelebene 2" width="100" height="100" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt0aENAAAIBDEU+4+Mx70C0SY3wVUBAABArlfc8uMXP37xAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEgN9gwAYQ==
+   eJzt0aENAAAIBDEs+y+Mx70C0SY3wVUBAABArlfc8uMXP37xAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEgNIwEAkQ==
   </data>
  </layer>
- <objectgroup id="2" name="Objektebene 1"/>
+ <group id="5" name="Room">
+  <objectgroup id="2" name="Objektebene 1" visible="0"/>
+ </group>
 </map>

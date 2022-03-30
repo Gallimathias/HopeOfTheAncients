@@ -15,6 +15,8 @@ namespace HopeOfTheAncients.Tiled
             public TileLayer(int width, int height)
             {
                 Data = new int[width * height];
+                Width = width;
+                Height = height;
             }
 
             public int[] Data { get; }

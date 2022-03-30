@@ -4,8 +4,10 @@ using engenious.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using static HopeOfTheAncients.Tiled.Map;
 
 namespace HopeOfTheAncients
 {
@@ -14,68 +16,75 @@ namespace HopeOfTheAncients
         private readonly GraphicsDevice graphicsDevice;
         private readonly VertexBuffer vertexBuffer;
         private readonly IndexBuffer indexBuffer;
-        private readonly Texture2D grass;
+        private readonly Texture2DArray textures;
         private readonly engenious.UserDefined.Shaders.map mapEffect;
-        
 
-        public ChunkRenderer(BaseScreenComponent manager)
+
+        public ChunkRenderer(BaseScreenComponent manager, Tiled.Map.TileLayer layer)
         {
             graphicsDevice = manager.GraphicsDevice;
 
-            grass = Texture2D.FromFile(graphicsDevice, "Assets/grass.png");
+            //grass = Texture2D.FromFile(graphicsDevice, "Assets/grass.png");
             mapEffect = manager.Content.Load<engenious.UserDefined.Shaders.map>("Shaders/map") ?? throw new ArgumentException();
+
 
             const int width = 100;
             const int height = 100;
             int vertexCount = width * height * 4;
-            vertexBuffer = new VertexBuffer(graphicsDevice, VertexPositionTexture.VertexDeclaration, vertexCount);
-            indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, width * height * 6);
 
-            var vertices = new VertexPositionTexture[vertexCount];
-            var indices = new ushort[indexBuffer.IndexCount];
-            int vIndex = 0, iIndex = 0;
+            var vertices = new List<ChunkVertex>(vertexCount);
+            var indices = new List<ushort>(width * height * 6);
+            int vIndex = 0;
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    indices[iIndex++] = (ushort)(vIndex + 0);
-                    indices[iIndex++] = (ushort)(vIndex + 1);
-                    indices[iIndex++] = (ushort)(vIndex + 2);
+                    var tile = layer[x, y];
+                    if (tile == 0)
+                        continue;
+                    indices.Add((ushort)(vIndex + 0));
+                    indices.Add((ushort)(vIndex + 1));
+                    indices.Add((ushort)(vIndex + 2));
 
-                    indices[iIndex++] = (ushort)(vIndex + 1);
-                    indices[iIndex++] = (ushort)(vIndex + 2);
-                    indices[iIndex++] = (ushort)(vIndex + 3);
+                    indices.Add((ushort)(vIndex + 1));
+                    indices.Add((ushort)(vIndex + 3));
+                    indices.Add((ushort)(vIndex + 2));
 
 
-                    vertices[vIndex++] = new VertexPositionTexture(new Vector3(x + 0, y + 0), new Vector2(0, 0));
-                    vertices[vIndex++] = new VertexPositionTexture(new Vector3(x + 1, y + 0), new Vector2(1, 0));
-                    vertices[vIndex++] = new VertexPositionTexture(new Vector3(x + 0, y + 1), new Vector2(0, 1));
-                    vertices[vIndex++] = new VertexPositionTexture(new Vector3(x + 1, y + 1), new Vector2(1, 1));
+
+                    vertices.Add(new ChunkVertex(new Vector3(x + 0, y + 0), new Vector2(0, 0), (uint)(tile - 1)));
+                    vertices.Add(new ChunkVertex(new Vector3(x + 1, y + 0), new Vector2(1, 0), (uint)(tile - 1)));
+                    vertices.Add(new ChunkVertex(new Vector3(x + 0, y + 1), new Vector2(0, 1), (uint)(tile - 1)));
+                    vertices.Add(new ChunkVertex(new Vector3(x + 1, y + 1), new Vector2(1, 1), (uint)(tile - 1)));
+                    vIndex += 4;
                 }
             }
-            vertexBuffer.SetData(vertices);
-            indexBuffer.SetData(indices);
+            vertexBuffer = new VertexBuffer(graphicsDevice, ChunkVertex.VertexDeclaration, vertices.Count);
+            indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, indices.Count);
+
+            vertexBuffer.SetData<ChunkVertex>(CollectionsMarshal.AsSpan(vertices));
+            indexBuffer.SetData<ushort>(CollectionsMarshal.AsSpan(indices));
         }
 
         public void Dispose()
         {
             vertexBuffer.Dispose();
             indexBuffer.Dispose();
-            grass?.Dispose();
+            //grass?.Dispose();
             mapEffect?.Dispose();
         }
 
-        public void Render(Camera camera)
+        public void Render(Camera camera, Texture2DArray textures)
         {
-            foreach(var p in mapEffect.Ambient.Passes)
+            foreach (var p in mapEffect.Ambient.Passes)
             {
                 p.Apply();
-                graphicsDevice.RasterizerState = new RasterizerState() { FillMode = PolygonMode.Line };
+                graphicsDevice.RasterizerState = new RasterizerState() { FillMode = PolygonMode.Fill, CullMode = CullMode.CounterClockwise };
                 graphicsDevice.VertexBuffer = vertexBuffer;
                 graphicsDevice.IndexBuffer = indexBuffer;
 
-                mapEffect.Ambient.MainPass.WorldViewProj = camera.ViewProjection;
-                mapEffect.Ambient.MainPass.grass = grass;
+                mapEffect.Ambient.MainPass.WorldViewProj = camera.ViewProjection * Matrix.CreateScaling(new Vector3(1));
+                mapEffect.Ambient.MainPass.Textures = textures;
 
                 graphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles, 0, 0, (int)vertexBuffer.VertexCount, 0, indexBuffer.IndexCount / 3);
 

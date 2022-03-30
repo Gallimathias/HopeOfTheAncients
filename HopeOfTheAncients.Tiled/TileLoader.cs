@@ -56,7 +56,7 @@ namespace HopeOfTheAncients.Tiled
                         throw new NotSupportedException("CSV encoding in combination with compression not supported!");
                     return new IntReader(data.Value);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(data.encoding));
             }
         }
         public static TileSet LoadTileset(string file)

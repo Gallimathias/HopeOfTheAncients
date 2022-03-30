@@ -9,7 +9,8 @@
             </Shader>
             <Attributes>
                 <attribute name="position">Position</attribute>
-                <attribute name="texCoord">TextureCoordinate</attribute>
+				<attribute name="texCoord">TextureCoordinate</attribute>
+				<attribute name="texIndex">Normal</attribute>
             </Attributes>
         </Pass>
     </Technique>

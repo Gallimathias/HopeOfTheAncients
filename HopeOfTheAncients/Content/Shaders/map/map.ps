@@ -1,11 +1,12 @@
 #version 130
 
-uniform sampler2D grass;
+uniform sampler2DArray Textures;
 
 in vec2 psTexCoord;
+flat in uint psTexIndex;
 
 out vec4 outColor;
 void main()
 {
-	outColor = texture(grass, psTexCoord);
+	outColor = texture(Textures, vec3(psTexCoord, psTexIndex));
 }

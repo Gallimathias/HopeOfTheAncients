@@ -4,27 +4,36 @@
         <TargetFramework>net6.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <Nullable>enable</Nullable>
-		<WarningsAsErrors>nullable</WarningsAsErrors>
+		<!--<WarningsAsErrors>nullable</WarningsAsErrors>-->
+		<IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="engenious" Version="0.6.0.7-alpha" />
-        <PackageReference Include="engenious.ContentTool" Version="0.6.0.5-alpha" />
+        <PackageReference Include="engenious.ContentTool" Version="0.6.1.4-alpha" />
+        <PackageReference Include="engenious.ContentTool.SourceGen" Version="0.6.1.4-alpha" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
         <PackageReference Include="engenious.UI" Version="0.6.0.1-alpha" />
+        <PackageReference Include="NonSucking.Framework.Extension.Rx" Version="1.0.0-alpha.46-74a9158" />
     </ItemGroup>
     <ItemGroup>
         <EngeniousContentReference Include="Content\Content.ecp" />
     </ItemGroup>
     <ItemGroup>
+      <!--<ProjectReference Include="..\..\engenious-Solution\engenious\engenious.csproj" />-->
       <ProjectReference Include="..\HopeOfTheAncients.Tiled\HopeOfTheAncients.Tiled.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <Reference Include="engenious.CreatedContent.Content">
-        <HintPath>Content\engenious.CreatedContent.Content.dll</HintPath>
-      </Reference>
     </ItemGroup>
     <ItemGroup>
       <None Update="Assets\**\*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="GeneratedFiles\engenious.ContentTool.SourceGen\engenious.ContentTool.SourceGen.SourceGen\" />
+    </ItemGroup>
+	<Target Name="RemoveSourceGeneratedFiles" BeforeTargets="BeforeBuild">
+		<ItemGroup>
+			<Compile Remove="GeneratedFiles\**" />
+		</ItemGroup>
+	</Target>
 </Project>
