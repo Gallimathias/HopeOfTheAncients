@@ -59,20 +59,62 @@ namespace HopeOfTheAncients.Tiled
                     throw new ArgumentOutOfRangeException(nameof(data.encoding));
             }
         }
-        public static TileSet LoadTileset(string file)
+        public static TileSet LoadTileset(string file, int firstId)
         {
             var r = new XmlRootAttribute("tileset");
             var ser = new XmlSerializer(typeof(Schemas.TileSet), r);
             using var fs = File.OpenRead(file);
             var ts = (Schemas.TileSet)(ser.Deserialize(fs) ?? throw new InvalidDataException());
-            var res = new TileSet(ts.tile.Length);
+            var tiles = new Tile[ts.tile.Length];
+
+            bool isUniform = true;
 
             for (int i=0;i<ts.tile.Length;i++)
             {
-                res.Tiles[i] = ts.tile[i].image.source;
+                var img = ts.tile[i].image;
+                tiles[i] = new Tile(img.source, img.width, img.height);
+                isUniform = isUniform && img.width == ts.tilewidth && img.height == ts.tileheight;
             }
 
-            return res;
+            return new TileSet(tiles, firstId, isUniform);
+        }
+        private static Map.ILayer ParseNode(Layer layer)
+        {
+            if (layer is TileLayer tileLayer)
+            {
+                var l = LoadLayerData(tileLayer);
+
+
+                var resLayer = new Map.TileLayer(tileLayer.name, tileLayer.width, tileLayer.height);
+                for (int j = 0; j < resLayer.Data.Length; j++)
+                    resLayer.Data[j] = -1;
+
+                int read = l.Read(resLayer.Data, 0, resLayer.Data.Length);
+
+                return resLayer;
+            }
+            else if (layer is Group group)
+            {
+                var gr = new Map.Group(group.name);
+                foreach (var c in group.Items)
+                {
+                    gr.Children.Add(ParseNode(c));
+                }
+                return gr;
+            }
+            else if (layer is ObjectGroup objectGroup)
+            {
+                var og = new Map.ObjectGroup(objectGroup.name);
+
+                foreach (var obj in objectGroup.@object)
+                {
+                    var e = new Entity(obj.gid, (float)obj.x, (float)obj.y, (float)obj.width, (float)obj.height);
+                    og.Entities.Add(e);
+                }
+
+                return og;
+            }
+            throw new NotSupportedException();
         }
         public static Map Load(FileInfo file)
         {
@@ -88,7 +130,7 @@ namespace HopeOfTheAncients.Tiled
                 var path = Path.Combine(file.Directory?.FullName ?? ".", mp.tileset[i].source);
                 if (File.Exists(path))
                 {
-                    var ts = LoadTileset(path);
+                    var ts = LoadTileset(path, mp.tileset[i].firstgid);
                     tileSets[i] = ts;
                 }
             }
@@ -103,19 +145,7 @@ namespace HopeOfTheAncients.Tiled
 
             for (int i = 0; i < mp.Layers.Length; i++)
             {
-                if (mp.Layers[i] is TileLayer tileLayer)
-                {
-                    var l = LoadLayerData(tileLayer);
-
-
-                    var resLayer = new Map.TileLayer(tileLayer.width, tileLayer.height);
-                    for (int j = 0; j < resLayer.Data.Length; j++)
-                        resLayer.Data[j] = -1;
-
-                    int read = l.Read(resLayer.Data, 0, resLayer.Data.Length);
-
-                    res.Layers[i] = resLayer;
-                }
+                res.Layers[i] = ParseNode(mp.Layers[i]);
             }
 
 

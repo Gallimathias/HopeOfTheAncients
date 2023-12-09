@@ -8,10 +8,14 @@ namespace HopeOfTheAncients.Tiled
 {
     public class TileSet
     {
-        public TileSet(int tileCount)
+        public TileSet(Tile[] tiles, int firstId, bool isUniform)
         {
-            Tiles = new string[tileCount];
+            Tiles = tiles;
+            FirstId = firstId;
+            IsUniform = isUniform;
         }
-        public string[] Tiles { get; }
+        public Tile[] Tiles { get; }
+        public bool IsUniform { get; }
+        public int FirstId { get; }
     }
 }

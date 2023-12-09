@@ -1,21 +1,20 @@
 ﻿using System;
 using engenious;
 
-namespace HopeOfTheAncients
+namespace HopeOfTheAncients;
+
+public class HopeOfTheAncientsGame : Game
 {
-    public class HopeOfTheAncientsGame : Game
+    public HopeOfTheAncientsGame()
+        : base(new GameSettings())
     {
-        public HopeOfTheAncientsGame()
-            : base(new GameSettings())
-        {
 
-        }
-        protected override void Initialize()
-        {
-            var screenComponent = new ScreenComponent(this);
+    }
+    protected override void Initialize()
+    {
+        var screenComponent = new ScreenComponent(this);
 
-            Components.Add(screenComponent);
-            base.Initialize();
-        }
+        Components.Add(screenComponent);
+        base.Initialize();
     }
 }
